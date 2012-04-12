@@ -1,0 +1,53 @@
+#!/bin/bash
+# A basic battery information script.
+# By: that4chanwolf
+# NOTE: I can't guarantee that this script will work for you. I only made this script for me, and I know that it works for me.
+
+# Set our main variables.
+# If I recall correctly, if we assign the output of acpi to a variable and ten look at that variable, acpi will only run once (when the variable is assigned), which will help make sure that we don't end up running acpi 3 or 4 times with different results each time
+ACPI_OUT=$(acpi)
+if [ "$(echo ${ACPI_OUT} | awk '{ print $5 }')" = "" ]; then
+	MAIN_INF=$(echo ${ACPI_OUT} | awk '{ print $4 $3 }' | sed -e 's/\%/\% /g' -e 's/,/ /g')l
+	OUTPUT_TYPE="1"
+else
+	MAIN_INF=$(echo ${ACPI_OUT} | awk '{ print $4 $3 $5 }' | sed -e 's/,/ /g')
+	OUTPUT_TYPE="0"
+fi
+# Set our other variables
+PERC=$(echo ${MAIN_INF} | awk '{ print $1 }')
+STATUS=$(echo ${MAIN_INF} | awk '{ print $2 }')
+if [ "${OUTPUT_TYPE}" = "0" ]; then
+	TIME=$(echo ${MAIN_INF} | awk '{ print $3 }')
+else
+	TIME="Finished!"
+fi
+
+# Do we even have a battery?
+if [ "${ACPI_OUT}" = "" ]; then
+	# Apparently not.
+	echo 'No battery!'
+else
+	# Yes, we do have a battery!
+	# But is our charge time available? Since we tell awk
+	if [ "${TIME}" = "rate" ]; then
+		echo 'Charge time not available, wait 5 seconds and try again!'
+	else
+
+	# Are we fully charged (OUTPUT_TYPE=1) or are we not fully charged (OUTPUT_TYPE=0)
+	if [ "${OUTPUT_TYPE}" = "0" ]; then
+		# Is our battery charging or discharging?
+		if [ "${STATUS}" = "Charging" ]; then
+			echo "${PERC} Charged, ${TIME} Until charged"
+		else
+			echo "${PERC} Charged, ${TIME} Remaining"
+		fi
+	elif [ "${OUTPUT_TYPE}" = "1" ]; then
+		if [ "${STATUS}" = "Charging" ]; then
+			echo "${PERC} Charged"
+		elif [ "${STATUS}" = "Full" ]; then
+			echo "${PERC} Charged, done!"
+		fi
+	fi
+
+	fi
+fi

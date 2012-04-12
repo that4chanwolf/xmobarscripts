@@ -1,0 +1,11 @@
+#!/bin/bash
+# A simple memory tool. Absolutely nothing difficult.
+# By: that4chanwolf
+
+total_mem=$(awk '/MemTotal/ { print $2 }' /proc/meminfo)
+totalmem=$(( ${total_mem}/1024 ))
+used_mem=$(free | awk '/cache:/ { print $3 }')
+usedmem=$(( ${used_mem}/1024 ))
+mempercent=$(( $(( ${used_mem}*100 ))/${total_mem} ))
+
+echo "Mem: ${usedmem}MB/${totalmem}MB, ${mempercent}% "

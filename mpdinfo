@@ -1,0 +1,18 @@
+#!/bin/bash
+# A simple MPD script that shows info on what song is playing
+# By: that4chanwolf
+
+# Set the variables for our MPD_HOST and MPD_PORT
+MPD_HOST="127.0.0.1"
+MPD_PORT="9900"
+
+if [ "$(ps aux | grep mpd | grep root | awk '{ print $11 }')" = '/usr/bin/mpd' ]; then
+	if [ "$(mpc -h ${MPD_HOST} -p ${MPD_PORT})" != 'error: Failed to resolve host name' ]; then
+		echo "$(mpc -h ${MPD_HOST} -p ${MPD_PORT} -f "%title% - %artist%" | grep '-')"
+	else
+		echo 'ERROR: Cannot connect to MPD!'
+	fi
+else
+	echo 'ERROR: MPD not running!'
+fi
+

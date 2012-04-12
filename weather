@@ -1,0 +1,7 @@
+#!/bin/bash
+# A simple weather display tool
+# By: that4chanwolf
+# Thanks to John (!Hu6) for most of this.
+
+# Note: Remember to put your zipcode in after ?p=
+echo "$(wget -q -O - 'http://xml.weather.yahoo.com/forecastrss?p=31337&u=f' | grep -E '(Current Conditions:|F<BR)' | sed -e 's/Current Conditions://' -e 's/<BR \/>//g' -e 's/<br \/>//' -e 's/<\/b>//' -e 's/<b>//' -e 's/\n//' | grep -E '([a-z]|[A-Z]|[0-9])')"

@@ -1,0 +1,8 @@
+#!/bin/bash
+# A tool that returns the IP address for each interface with an IP address
+# By: that4chanwolf
+
+for interface in $(ifconfig | grep 'RUNNING' -B 4 | grep 'HWaddr' | awk '{ print $1 }');
+	do
+	echo ${interface}: $(ifconfig ${interface} | grep 'inet addr' | grep -Eo 'addr:[^ ]+' | sed -e 's/addr://')
+done
