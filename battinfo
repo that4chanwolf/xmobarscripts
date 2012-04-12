@@ -38,14 +38,18 @@ else
 		# Is our battery charging or discharging?
 		if [ "${STATUS}" = "Charging" ]; then
 			echo "${PERC} Charged, ${TIME} Until charged"
-		else
+		elif [ "${STATUS}" = "Discharging" ]; then
 			echo "${PERC} Charged, ${TIME} Remaining"
+		else
+			echo 'ERROR: Battery status unknown!'
 		fi
 	elif [ "${OUTPUT_TYPE}" = "1" ]; then
 		if [ "${STATUS}" = "Charging" ]; then
 			echo "${PERC} Charged"
 		elif [ "${STATUS}" = "Full" ]; then
 			echo "${PERC} Charged, done!"
+		elif [ "${STATUS}" = "Unknown" ]; then
+			echo 'ERROR: Battery status unkown!'
 		fi
 	fi
 
