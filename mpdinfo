@@ -6,8 +6,11 @@
 MPD_HOST="127.0.0.1"
 MPD_PORT="9900"
 
+# Check if MPD is running or not
 if [ "$(ps aux | grep mpd | grep root | awk '{ print $11 }')" = '/usr/bin/mpd' ]; then
-	if [ "$(mpc -h ${MPD_HOST} -p ${MPD_PORT})" != 'error: Failed to resolve host name' ]; then
+	# Canw we connect to our hostname?
+	# Fixed a bug where it would just echo the actual error message instead of our error message
+	if [ "$(mpc -h ${MPD_HOST} -p ${MPD_PORT} 2>&1)" != 'error: Failed to resolve host name' ]; then
 		echo "$(mpc -h ${MPD_HOST} -p ${MPD_PORT} -f "%title% - %artist%" | grep '-')"
 	else
 		echo 'ERROR: Cannot connect to MPD!'
