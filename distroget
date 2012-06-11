@@ -1,63 +1,9 @@
 #!/bin/bash
-# A not-so-simple tool which tells the user their distro, OS, and kernel version
 # By: that4chanwolf
-# Sure, we could have used a one liner, but what's the fun in that?
+# Compared to the clusterfuck of if statements that we were using, I think this will work pretty fine.
 
-# Does lsb_release exist?
-if which lsb_release >/dev/null 2>&1; then
-	# Yup.
-	# Let's define our distro variable.
-	distro=$(lsb_release -i | sed -e 's/Distributor ID://' -e 's/\t//g')
-else
-	# Nope.
-	# TODO: Add other methods of checking what distro we're using.
-	echo 'ERROR: lsb_release not found!'
-fi
-# Does uname exist?
-if [ "$(uname)" != "" ]; then
-	# Yup.
-	# Does it output our OS?
-	if [ "$(uname -o)" != "" ]; then
-		# Yup.
-		# Let's define our OS variable.
-		opersyst=$(uname -o)
-	else
-		# Nope.
-		# Let's just tell them that they're a hipster.
-		opersyst="Hip/ster"
-	fi
-	# Does it output our kernel version?
-	if [ "$(uname -r)" != "" ]; then
-		# Yup.
-		# Let's define our kernel version variable, and let's strip out what platform it is.
-		# i.e. amd64, i686, SPARC, etc.
-		kerver=$(uname -r | sed -e 's/.amd64$//' -e 's/.i386$//' -e 's/.i486$//' -e 's/.i686$//' -e 's/.mips$//' -e 's/.sparc$//' )
-	else
-		# Nope.
-		# Okay, this time let's actually consider this an error.
-		kerver="ERROR: Kernel version not found"
-	fi
-fi
-# Okay, now let's echo all of that stuff.
-# TODO: Oh god, the nested if statements. Kill self, and then get rid of all these nested if statements.
-#if [ "${distro}" != "" && "${opersyst}" != "" && "${kerver}" != "" ]; then
-if [ "${distro}" != "" ]; then
-	# Our distro variable exists, good to go.
-	if [ "${opersyst}" != "" ]; then
-		# Our OS variable exists, good to go.
-		if [ "${kerver}" != "" ]; then
-			# Our kernel version variable exists, lets go!
-			echo "$(echo ${distro} | sed -e 's/\t//g') $(echo ${opersyst} | sed -e 's/\t//g') $(echo ${kerver} | sed -e 's/\t//g') "
-		else
-			# Our kernel version doesn't exist. Shit.
-			echo 'No kernel version!'
-		fi
-	else
-		# Our OS variable doesn't exist. Shit.
-		echo 'No OS information available!'
-	fi
-else
-	# Our distro variable doesn't exist. Shit.
-	echo 'No distro version available!'
+distro=$(lsb_release -i | sed -e 's/Distributor ID://' -e 's/\t//g')
+opersyst=$(uname -o)
+kerver=$(uname -r | sed -e 's/.amd64$//' -e 's/.i386$//' -e 's/.i486$//' -e 's/.i686$//' -e 's/.mips$//' -e 's/.sparc$//' -e 's/.generic$//')
 
-fi
+echo "$(echo ${distro} | sed -e 's/\t//g') $(echo ${opersyst} | sed -e 's/\t//g') $(echo ${kerver} | sed -e 's/\t//g') "
