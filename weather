@@ -5,7 +5,7 @@
 
 # Check to see if we have an IP address
 if [ "$(ifconfig | grep 'RUNNING' -B 4 | grep 'HWaddr' | awk '{ print $1 }')" = "" ]; then
-	echo 'Error: Can't connect!'
+	echo 'Error: Cant connect!'
 else
 	# Note: Remember to put your zipcode in after ?p=
 	echo "$(wget -q -O - 'http://xml.weather.yahoo.com/forecastrss?p=31337&u=f' | grep -E '(Current Conditions:|F<BR)' | sed -e 's/Current Conditions://' -e 's/<BR \/>//g' -e 's/<br \/>//' -e 's/<\/b>//' -e 's/<b>//' -e 's/\n//' | grep -E '([a-z]|[A-Z]|[0-9])')"
